@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+{% include 'commons/_header.html.twig' %}
+    <br>
+    <h1 class="m-auto w-50">MA SUPER HOME PAGE </h1>
+    <br>
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <h2 class="m-auto w-50">HELLO {{app.user.firstname}}</h2>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+{% block title %}Mon article cliqué{% endblock %}
+{% form_theme commentForm 'bootstrap_5_layout.html.twig' %}
+
+{% block body %}
+    {% include 'commons/_header.html.twig' %}
+    <div class="card">
+        <div class="card-header">
+            Titre : {{ articles.title }}
+        </div>
+        <div class="card-body">
+            <blockquote class="blockquote mb-0">
+                <div class="d-flex">
+                    <img src="{% if articles.img == null %}
+                http://via.placeholder.com/640x360
+                {% else %}
+                {{ asset('uploadDirectory/' ~ articles.img) }}
+                {% endif %}" class="img-art">
+
+                    <p>{{ articles.description }}.</p>
+                </div>
+                <span> Catégorie: {{ articles.type.name }}</span>
+                <br>
+                <br>
+                <div class="d-flex justify-content-between">
+                    <footer class="blockquote-footer">Ecrit par <cite title="Source Title">{{ articles.user.firstname }} , {{ articles.user.lastname }}</cite></footer>
+                    <footer class="blockquote-footer">Derniere modification le :<cite title="Source Title"> {{ articles.updatedate | date( "d/m/Y") }}   </footer>
+                </div>
+            </blockquote>
+            <a href="{{ path('app_article') }}" class="btn btn-secondary">Retour</a>
+                {% if app.user.id == articles.user.id or app.user.roles == ["ROLE_SUPERADMIN"] %}
+                    <a href="{{ path('changeActiveArticle', {'id':articles.id}) }}" class="btn btn-danger w-25">desactiver l'article</a>
+                {% endif %}
+            <a href="{{ path('changeActiveLike', {'id':articles.id}) }}" class="btn  {% if jaime == true %}
+            btn-success
+            {% else %}
+            btn-danger
+            {% endif %}">
+               {% if jaime == true %}
+            J'aime
+            {% else %}
+            J'aime pas
+            {% endif %}</a>
+
+        </div>
+        <span>Like par:
+            {% if articles.likedby|length>2 %}
+
+            {% for fav in articles.likedby|slice(0, 2) %}
+                {{ fav.firstname }},
+            {% endfor %}
+                et
+                {{ articles.likedby|length -2 }} autre personne
+                {% else %}
+                    {% for fav in articles.likedby|slice(0, 2) %}
+                        ,{{ fav.firstname }}
+                    {% endfor %}
+            {% endif %}
+        </span>
+    </div>
+    {% for comment in comments %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">{{ comment.user.firstname }}</h5>
+            <p class="card-text">{{ comment.description }}</p>
+            <p class="card-text"><small class="text-muted">fait le : {{ comment.datecreate | date( "d/m/Y") }}</small></p>
+        </div>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') and app.user.id == comment.user.id or app.user.roles == ["ROLE_SUPERADMIN"] %}
+                <a href="{{ path('changeActiveComment', {'id':comment.id}) }}" class="btn btn-danger w-25">supprimer le commentaire</a>
+            {% endif %}
+
+    </div>
+    {% endfor %}
+
+
+    <div class="w-50 m-auto">
+        {{ form(commentForm) }}
+    </div>
+{% endblock %}

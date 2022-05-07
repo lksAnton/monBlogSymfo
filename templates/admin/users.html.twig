@@ -1,0 +1,136 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des utilisateurs{% endblock %}
+
+{% block body %}
+    {% include 'commons/_header.html.twig' %}
+    <h1>Liste des utilisateurs</h1>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <th scope="col">Email</th>
+            {% endif %}
+            <th scope="col">Role</th>
+            <th scope="col">Articles</th>
+            {% if is_granted('ROLE_SUPERADMIN') %}
+            <th scope="col">Action</th>
+            {% endif %}
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for user in users %}
+        <tr>
+            <th scope="row">{% if is_granted('IS_AUTHENTICATED_FULLY') %}{{ user.id }} {% else %} #{% endif %}</th>
+            <td>{{ user.firstname }} {{ dump(user.active) }}</td>
+            <td>{{ user.lastname }}</td>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <td>{{ user.email }}</td>
+            {% endif %}
+            <td>
+                {# On boucle sur les rôles #}
+                {% for role in user.roles %}
+                    {% if role == "ROLE_USER" %}
+                        Utilisateur
+                    {% elseif role == "ROLE_SUPERADMIN" %}
+                        Super Admin
+                    {% elseif role == "ROLE_ADMIN" %}
+                        Admin
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>{{ user.articles|length }}</td>
+            {% if is_granted('ROLE_SUPERADMIN') %}
+            <td><a  class="btn btn-primary" href="{{ path('modifier_utilisateur', {'id': user.id}) }}">Modifier</a></td>
+            {% endif %}
+        </tr>
+        {% else %}
+            <p>Aucun utilisateur inscrit</p>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_granted('ROLE_SUPERADMIN') %}
+
+    <h2>Utilisateurs Desactivés</h2>
+    <table class="table table-bordered bg-secondary">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            <th scope="col">Articles</th>
+            <th scope="col">Action</th>
+
+        </tr>
+        </thead>
+        {% for user in usersInactive %}
+            <tbody>
+            <tr>
+                <th scope="row">{{ user.id }}</th>
+                <td>{{ user.firstname }}</td>
+                <td>{{ user.lastname }}</td>
+                    <td>{{ user.email }}</td>
+                <td>
+                    {# On boucle sur les rôles #}
+                    {% for role in user.roles %}
+                        {% if role == "ROLE_USER" %}
+                            Utilisateur
+                        {% elseif role == "ROLE_SUPERADMIN" %}
+                            Super Admin
+                        {% elseif role == "ROLE_ADMIN" %}
+                            Admin
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ user.articles|length }}</td>
+                <td><a  class="btn btn-primary" href="{{ path('modifier_utilisateur', {'id': user.id}) }}">Modifier</a></td>
+            </tr>
+            </tbody>
+        {% endfor %}
+    </table>
+    {% endif %}
+<!--
+    <table>
+        <thead>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Rôles</th>
+        <th>Articles</th>
+        <th>Actions</th>
+        </thead>
+        <tbody>
+        {# On boucle sur les utilisateurs #}
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    {# On boucle sur les rôles #}
+                    {% for role in user.roles %}
+                        {% if role == "ROLE_USER" %}
+                            Utilisateur
+                        {% elseif role == "ROLE_SUPERADMIN" %}
+                            Super admin
+                        {% elseif role == "ROLE_ADMIN" %}
+                            Administrateur
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ user.articles|length }}</td>
+                <td><a href="{{ path('modifier_utilisateur', {'id': user.id}) }}">Modifier</a></td>
+            </tr>
+
+        {% else %}
+            <p>Aucun utilisateur inscrit</p>
+        {% endfor %}
+        </tbody>
+    </table> -->
+{% endblock %}

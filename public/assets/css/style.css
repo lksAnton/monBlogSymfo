@@ -1,0 +1,12 @@
+.d-wrap {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.m-15 {
+    margin: 15px;
+}
+.img-art{
+    width: 640px;
+    height: 360px;
+}

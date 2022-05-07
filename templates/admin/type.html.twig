@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Types{% endblock %}
+{% form_theme typeForm 'bootstrap_5_layout.html.twig' %}
+
+
+{% block body %}
+    {% include 'commons/_header.html.twig' %}
+    <div class="w-75 m-auto">
+        <h1>Modifier un type</h1>
+        {{ form(typeForm) }}
+    </div>
+    <br>
+    <div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nom du type</th>
+                    <th scope="col">Action</th>
+
+                </tr>
+            </thead>
+            {% for type in types %}
+            <tbody>
+                <tr>
+                    <th scope="row">#</th>
+                    <td>{{ type.name }}</td>
+                    <td><a  class="btn btn-danger" href="{{ path('deleteType',{'id': type.id}) }}">supprimer le type </a></td>
+
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+
+{% endblock %}

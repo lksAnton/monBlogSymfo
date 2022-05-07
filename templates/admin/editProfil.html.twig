@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un utilisateur{% endblock %}
+{% form_theme editProfilForm 'bootstrap_5_layout.html.twig' %}
+
+
+{% block body %}
+    {% include 'commons/_header.html.twig' %}
+    <div class="m-auto w-75">
+    {{ form(editProfilForm) }}
+    </div>
+{% endblock %}

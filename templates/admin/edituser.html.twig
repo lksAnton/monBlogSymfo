@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un utilisateur{% endblock %}
+{% form_theme userForm 'bootstrap_5_layout.html.twig' %}
+
+
+{% block body %}
+    {% include 'commons/_header.html.twig' %}
+
+    <div class="w-75 m-auto">
+        <h1>Modifier un utilisateur</h1>
+        {{ form(userForm) }}
+
+        <div>
+            <a href="{{ path('deleteUser', {id: user.id }) }}" class="btn btn-danger"> Supprimer le compte </a>
+            <a href="{{ path('desactiverUser', {id: user.id }) }}" class="btn btn-secondary">Désactiver le compte</a>
+        </div>
+    </div>
+
+
+{% endblock %}
